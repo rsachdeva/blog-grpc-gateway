@@ -1,0 +1,8 @@
+FROM alpine
+
+
+RUN apk update && \
+  apk add --no-cache openssl && \
+  rm -rf /var/cache/apk/*
+WORKDIR tls
+CMD sh ./instructions.sh

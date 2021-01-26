@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package blog;
+option go_package = ".;blogpb";
+
+import "google/api/annotations.proto";
+
+message Blog {
+  string id = 1;
+  string author_id = 2;
+  string title = 3;
+  string content = 4;
+}
+
+message CreateBlogRequest {
+  Blog blog = 1;
+}
+
+message CreateBlogResponse {
+  Blog blog = 1; //will have blog id
+}
+
+message ReadBlogRequest {
+  string blog_id = 1;
+}
+
+message ReadBlogResponse {
+  Blog blog = 1;
+}
+
+message UpdateBlogRequest {
+  Blog blog = 1;
+}
+
+message UpdateBlogResponse {
+  Blog blog = 1;
+}
+
+message DeleteBlogRequest {
+  string blog_id = 1;
+}
+
+message DeleteBlogResponse {
+  string blog_id = 1;
+}
+
+message ListBlogRequest {
+}
+
+message ListBlogResponse {
+  Blog blog = 1;
+}
+
+
+service BlogService {
+  // Unary
+   rpc CreateBlog(CreateBlogRequest) returns (CreateBlogResponse) {
+     option (google.api.http) = {
+       post: "/v1/blog/create"
+       body: "*"
+     };
+   }
+
+  // Unary- sends back not found grpc style error
+  rpc ReadBlog(ReadBlogRequest) returns (ReadBlogResponse) {
+    option (google.api.http) = {
+      get: "/v1/blog/{blog_id}"
+    };
+  }
+
+  // Unary- before updating, does not found check, sends back not found grpc style error
+  rpc UpdateBlog(UpdateBlogRequest) returns (UpdateBlogResponse);
+
+  // Unary- sends back not found grpc style error
+  rpc DeleteBlog(DeleteBlogRequest) returns (DeleteBlogResponse);
+
+  // Server Streaming
+  rpc ListBlog(ListBlogRequest) returns (stream ListBlogResponse);
+}
